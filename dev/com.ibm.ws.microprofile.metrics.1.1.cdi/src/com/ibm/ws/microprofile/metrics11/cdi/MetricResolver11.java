@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2018 IBM Corporation and others.
+ * Copyright (c) 2018 IBM Corporation and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -21,26 +21,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package io.astefanutti.metrics.cdi;
+package com.ibm.ws.microprofile.metrics11.cdi;
 
-import javax.enterprise.inject.spi.AnnotatedMember;
-import javax.enterprise.inject.spi.InjectionPoint;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Specializes;
+import javax.inject.Inject;
 
-import org.eclipse.microprofile.metrics.Metadata;
+import io.astefanutti.metrics.cdi.MetricName;
+import io.astefanutti.metrics.cdi.MetricResolver;
+import io.astefanutti.metrics.cdi.MetricsExtension;
 
-public interface MetricName {
+@ApplicationScoped
+@Specializes
+public class MetricResolver11 extends MetricResolver {
 
-    String of(InjectionPoint point);
-
-    String of(AnnotatedMember<?> member);
-
-    // TODO: expose an SPI so that external strategies can be provided. For example, Camel CDI could provide a property placeholder resolution strategy.
-    String of(String attribute);
-
-    Metadata metadataOf(InjectionPoint point, Class<?> type);
-
-    Metadata metadataOf(AnnotatedMember<?> member, Class<?> type);
-
-    Metadata metadataOf(AnnotatedMember<?> member);
-
+    @Inject
+    public MetricResolver11(MetricsExtension extension, MetricName metricName) {
+        this.extension = extension;
+        this.metricName = metricName;
+    }
 }
